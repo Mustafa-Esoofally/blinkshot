@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "@uidotdev/usehooks";
 import Image from "next/image";
 import { useState } from "react";
+import DownloadButton from "@/components/DownloadButton";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
@@ -110,7 +111,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="mt-4 flex w-full max-w-4xl justify-center">
-            <div>
+            <div className="relative group">
               <Image
                 placeholder="blur"
                 blurDataURL={imagePlaceholder.blurDataURL}
@@ -118,8 +119,14 @@ export default function Home() {
                 height={768}
                 src={`data:image/png;base64,${image.b64_json}`}
                 alt=""
-                className={`${isFetching ? "animate-pulse" : ""} max-w-full rounded-lg object-cover shadow-sm shadow-black`}
+                className={`${
+                  isFetching ? "animate-pulse" : ""
+                } max-w-full rounded-lg object-cover shadow-sm shadow-black`}
               />
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity" />
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                <DownloadButton imageData={image.b64_json} prompt={prompt} />
+              </div>
             </div>
           </div>
         )}
