@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "@uidotdev/usehooks";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { DownloadButton } from "@/components/DownloadButton";
 
 type ImageResponse = {
   b64_json: string;
@@ -141,7 +142,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="mt-4 flex w-full max-w-4xl flex-col justify-center">
-            <div>
+            <div className="relative group">
               <Image
                 placeholder="blur"
                 blurDataURL={imagePlaceholder.blurDataURL}
@@ -151,13 +152,14 @@ export default function Home() {
                 alt=""
                 className={`${isFetching ? "animate-pulse" : ""} max-w-full rounded-lg object-cover shadow-sm shadow-black`}
               />
+              <DownloadButton imageData={activeImage.b64_json} prompt={prompt} />
             </div>
 
             <div className="mt-4 flex gap-4 overflow-x-scroll pb-4">
               {generations.map((generatedImage, i) => (
                 <button
                   key={i}
-                  className="w-32 shrink-0 opacity-50 hover:opacity-100"
+                  className="relative w-32 shrink-0 opacity-50 hover:opacity-100 group"
                   onClick={() => setActiveIndex(i)}
                 >
                   <Image
@@ -168,6 +170,10 @@ export default function Home() {
                     src={`data:image/png;base64,${generatedImage.image.b64_json}`}
                     alt=""
                     className="max-w-full rounded-lg object-cover shadow-sm shadow-black"
+                  />
+                  <DownloadButton
+                    imageData={generatedImage.image.b64_json}
+                    prompt={generatedImage.prompt}
                   />
                 </button>
               ))}
